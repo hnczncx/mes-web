@@ -62,6 +62,7 @@
 
 
 
+
                     <el-button type="text" style="padding:0">提交</el-button>
                     <el-button type="text" style="padding:0">更新</el-button>
                   </div>
@@ -87,8 +88,8 @@
               <!-- 子任务 -->
               <div class="stepaline">
                 <div class="task-step">
-                  <label class="t-state">
-                    <i class="el-icon-circle-check"></i>已启动
+                  <label class="">
+                    <i class="el-icon-circle-check"></i>未启动
                   </label>
                   <label class="title-step">1.BOM信息创建</label>
 
@@ -119,7 +120,7 @@
             <label class="tablab">新增任务</label>
           </div>
 
-          <div>
+          <div class="t-con">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
               <el-form-item>
                 <label class="tablab">任务级别</label>
@@ -214,10 +215,16 @@
   visibility: hidden;
 }
 .task-container {
+  ::v-deep .el-button + .el-dialog__wrapper + .el-button{
+    margin-left: 10px;
+  }
   // 文件上传弹框
   ::v-deep .el-upload,::v-deep .el-upload-dragger{width: 100%;}
   ::v-deep .el-dialog__body{padding-top: 0;}
-  .el-upload__tip{}
+   ::v-deep .el-upload-dragger .el-upload__tip{
+    line-height: 16px;
+    margin-top: 0;
+  }
 
   // 任务管理-头部检索
   .el-radio-group {
@@ -225,13 +232,13 @@
   }
 
   /* 折叠面板 */
-  ::v-deep .el-collapse-item__arrow {
-    // display: none;
-  }
+  // ::v-deep .el-collapse-item__arrow {
+  //   // display: none;
+  // }
   ::v-deep .el-collapse-item__header {
     border-bottom: none;
   }
-  ::v-deep .el-progress {
+  ::v-deep .title-all + .el-progress,.title-step + .btn + .el-progress {
     width: 280px;
     float: right;
     position: relative;
@@ -241,17 +248,18 @@
     position: absolute;
     right: 20%;
   }
-  .task-step label:nth-child(1) {
+  
+  .el-tab-pane:nth-child(1) .task-step label:nth-child(1) {
     color: #d2d2d2;
     margin-right: 20px;
   }
-  .el-collapse-item .task-step .t-state {
+  .el-tab-pane:nth-child(1) .el-collapse-item .task-step .t-state {
     color: #409eff;
   }
 }
 
-.taskshow {
-  // margin-top: 30px;
+.el-tab-pane:nth-child(2) .taskshow {
+  margin-top: 30px;
 }
 .el-collapse-item {
   border: none;
@@ -295,6 +303,9 @@
 .taskDescribe .el-input {
   width: 480px;
   display: block;
+}
+.t-con .el-form .el-form-item:last-child{
+position: relative;top: 40px;
 }
 .taskBtn .el-button {
   display: block;
