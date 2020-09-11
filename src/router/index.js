@@ -288,19 +288,7 @@ export const constantRoutes = [{
       }
     }]
   },
-  {
-    path: '/',
-    component: Layout,
-    children: [{
-      path: '/zhedieceshi',
-      name: 'Form',
-      component: () => import('@/views/zhedieceshi'),
-      meta: {
-        title: '折叠面板测试',
-        icon: 'form'
-      }
-    }]
-  },
+ 
   {
     path: '/',
     component: Layout,
