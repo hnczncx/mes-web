@@ -60,8 +60,10 @@
 
 
       <el-table-column prop="taskgl" label="任务管理">
-        <el-button type="text" style="padding:0">启动任务</el-button>
-        <el-button type="text" style="padding:0">完成任务</el-button>
+        <template slot-scope="scope">
+          <el-button type="text" style="padding:0" @click="getRowData(scope.row)">启动任务</el-button>
+          <el-button type="text" style="padding:0">完成任务</el-button>
+        </template>
       </el-table-column>
       <el-table-column prop="operation" label="操作">
         <el-button type="text" style="padding:0">完成订单</el-button>
@@ -205,6 +207,15 @@ export default {
       filterHandler(value, row, column) {
         const property = column['property'];
         return row[property] === value;
+      },
+      getRowData (row) {
+        console.info(row)
+      },
+      onCancel () {
+
+      },
+      onSubmit () {
+        
       }
     }
 };

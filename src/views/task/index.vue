@@ -20,90 +20,60 @@
         </div>
         <div class="taskshow">
           <el-collapse v-model="activeNames" @change="handleChange">
-            <el-collapse-item>
+            <el-collapse-item v-for="action in actionList" :key="action.detail_id">
               <!-- 总任务 -->
               <template slot="title">
                 <label class="taskhead">TASK</label>
-                <label class="title-all">线上任务1:零件设计及工艺数据处理</label>
-
-                <el-progress :percentage="percentage" :color="customColorMethod"></el-progress>
+                <label class="title-all">{{action.name}}:{{action.description}}</label>
+                <el-progress :percentage="action.progress" :color="customColorMethod"></el-progress>
               </template>
               <!-- 子任务 -->
-              <div class="stepaline">
+              <div class="stepaline" v-for="(children,index) in action.children" :key="children.id">
                 <div class="task-step">
                   <label class="t-state">
                     <i class="el-icon-circle-check"></i>已启动
                   </label>
-                  <label class="title-step">1.BOM信息创建</label>
+                  <label class="title-step">{{index}}.{{children.name}}</label>
 
                   <div class="btn">
                     <el-button type="text" style="padding:0" @click="open2">启动任务</el-button>
 
                     <!-- 文件上传 -->
- <el-button slot="reference" type="text" style="padding:0"  @click="dialogFormVisible = true">文件上传</el-button>
-<el-dialog title="文件上传" :visible.sync="dialogFormVisible">
-  <el-upload
-  class="upload-demo"
-  drag
-  action="https://jsonplaceholder.typicode.com/posts/"
-  multiple>
-  <i class="el-icon-upload"></i>
-  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-  <div class="el-upload__tip" >文件格式及大小限制说明</div>
-</el-upload>
+                    <el-button
+                      slot="reference"
+                      type="text"
+                      style="padding:0"
+                      @click="dialogFormVisible = true"
+                    >文件上传</el-button>
+                    <el-dialog title="文件上传" :visible.sync="dialogFormVisible">
+                      <el-upload
+                        class="upload-demo"
+                        drag
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        multiple
+                      >
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">
+                          将文件拖到此处，或
+                          <em>点击上传</em>
+                        </div>
+                        <div class="el-upload__tip">文件格式及大小限制说明</div>
+                      </el-upload>
 
-
-
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-  </div>
-</el-dialog>
-
-
-
+                      <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                      </div>
+                    </el-dialog>
 
                     <el-button type="text" style="padding:0">提交</el-button>
                     <el-button type="text" style="padding:0">更新</el-button>
                   </div>
-                  <el-progress
+                  <!-- <el-progress
                     :percentage="percentage"
                     :stroke-width="4"
                     :color="customColorMethod"
-                  ></el-progress>
-                </div>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-
-          <el-collapse v-model="activeNames" @change="handleChange">
-            <el-collapse-item>
-              <!-- 总任务 -->
-              <template slot="title">
-                <label class="taskhead">TASK</label>
-                <label class="title-all">线上任务1:零件设计及工艺数据处理</label>
-
-                <el-progress :percentage="percentage" :color="customColorMethod"></el-progress>
-              </template>
-              <!-- 子任务 -->
-              <div class="stepaline">
-                <div class="task-step">
-                  <label class="">
-                    <i class="el-icon-circle-check"></i>未启动
-                  </label>
-                  <label class="title-step">1.BOM信息创建</label>
-
-                  <div class="btn">
-                    <el-button type="text" style="padding:0">启动任务</el-button>
-                    <el-button type="text" style="padding:0">文件上传</el-button>
-                    <el-button type="text" style="padding:0">提交</el-button>
-                    <el-button type="text" style="padding:0">更新</el-button>
-                  </div>
-                  <el-progress
-                    :percentage="percentage1"
-                    :stroke-width="4"
-                    :color="customColorMethod"
-                  ></el-progress>
+                  ></el-progress>-->
                 </div>
               </div>
             </el-collapse-item>
@@ -153,11 +123,11 @@
         <!-- 任务详细展示模块，布局样式同任务管理页基本一致 -->
         <div class="taskshow">
           <el-collapse v-model="activeNames" @change="handleChange">
-            <el-collapse-item>
+            <el-collapse-item v-for="task in taskList" :key="task.id">
               <!-- 总任务 -->
               <template slot="title">
                 <label class="taskhead">TASK</label>
-                <label class="title-all">线上任务1:零件设计及工艺数据处理</label>
+                <label class="title-all">{{task.name}}:{{task.description}}</label>
 
                 <div class="btn0">
                   <el-button type="text" style="padding:0">提交</el-button>
@@ -168,8 +138,8 @@
 
               <!-- 子任务 -->
               <div class="stepaline">
-                <div class="task-step">
-                  <label class="title-step">1.BOM信息创建</label>
+                <div class="task-step" v-for="children in task.children" :key="children.id">
+                  <label class="title-step">{{children.name}}</label>
                   <div class="btn">
                     <el-button type="text" style="padding:0">提交</el-button>
                     <el-button type="text" style="padding:0">编辑</el-button>
@@ -177,7 +147,7 @@
                   </div>
                 </div>
 
-                <div class="task-step">
+                <!-- <div class="task-step">
                   <label class="title-step">2.PMI标注</label>
                   <div class="btn">
                     <el-button type="text" style="padding:0">提交</el-button>
@@ -193,7 +163,7 @@
                     <el-button type="text" style="padding:0">编辑</el-button>
                     <el-button type="text" style="padding:0">删除</el-button>
                   </div>
-                </div>
+                </div>-->
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -215,13 +185,18 @@
   visibility: hidden;
 }
 .task-container {
-  ::v-deep .el-button + .el-dialog__wrapper + .el-button{
+  ::v-deep .el-button + .el-dialog__wrapper + .el-button {
     margin-left: 10px;
   }
   // 文件上传弹框
-  ::v-deep .el-upload,::v-deep .el-upload-dragger{width: 100%;}
-  ::v-deep .el-dialog__body{padding-top: 0;}
-   ::v-deep .el-upload-dragger .el-upload__tip{
+  ::v-deep .el-upload,
+  ::v-deep .el-upload-dragger {
+    width: 100%;
+  }
+  ::v-deep .el-dialog__body {
+    padding-top: 0;
+  }
+  ::v-deep .el-upload-dragger .el-upload__tip {
     line-height: 16px;
     margin-top: 0;
   }
@@ -238,7 +213,8 @@
   ::v-deep .el-collapse-item__header {
     border-bottom: none;
   }
-  ::v-deep .title-all + .el-progress,.title-step + .btn + .el-progress {
+  ::v-deep .title-all + .el-progress,
+  .title-step + .btn + .el-progress {
     width: 280px;
     float: right;
     position: relative;
@@ -248,7 +224,7 @@
     position: absolute;
     right: 20%;
   }
-  
+
   .el-tab-pane:nth-child(1) .task-step label:nth-child(1) {
     color: #d2d2d2;
     margin-right: 20px;
@@ -304,8 +280,9 @@
   width: 480px;
   display: block;
 }
-.t-con .el-form .el-form-item:last-child{
-position: relative;top: 40px;
+.t-con .el-form .el-form-item:last-child {
+  position: relative;
+  top: 40px;
 }
 .taskBtn .el-button {
   display: block;
@@ -345,6 +322,7 @@ position: relative;top: 40px;
 </style>
 
 <script>
+import request from "@/utils/request";
 export default {
   data() {
     return {
@@ -363,11 +341,14 @@ export default {
       },
       // 文件上传
       dialogFormVisible: false,
-        
-
+      taskList: [],
+      actionList: [],
     };
   },
-
+  mounted() {
+    this.getTaskList();
+    this.getActionList();
+  },
   methods: {
     // 文件上传
 
@@ -392,6 +373,39 @@ export default {
       } else {
         return "#67c23a";
       }
+    },
+    getTaskList() {
+      request
+        .post("/taskInfo/queryByMouldId/1303934895235362817")
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.taskList = dataInfo;
+          } else {
+            this.$message({ message: "查询任务失败！", type: "warning" });
+          }
+        });
+    },
+    getActionList() {
+      request
+        .post("/taskInfo/queryByActionId/1304259144857899010")
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.actionList = dataInfo;
+          } else {
+            this.$message({ message: "查询任务失败！", type: "warning" });
+          }
+        });
+    },
+    percentage(num, total) {
+      if (total == 0) {
+        return 100;
+      }
+      if (num == 0) {
+        return 0;
+      }
+      return parseInt(num / total);
     },
   },
 };

@@ -253,7 +253,7 @@ export default {
     },
      // 看板 to MES后台-任务管理页
     gotoTask(){
- this.$router.replace('/task/index');
+      this.$router.replace('/task/index');
     }
   },
 };
