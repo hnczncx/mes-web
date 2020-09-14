@@ -59,7 +59,7 @@ margin-bottom: 10px;
     
 }
 .drawing{
-  border: #C0C4CC 1px solid;
+  border: #E4E7ED 1px solid;
   border-radius: 10px;
   height: 100%;
   min-height: 500px;
