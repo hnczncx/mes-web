@@ -11,7 +11,6 @@ const service = axios.create({
 })
 
 service.defaults.headers['Content-Type'] = 'application/json'
-service.defaults.withCredentials = true
 // request interceptor
 service.interceptors.request.use(
   config => {
