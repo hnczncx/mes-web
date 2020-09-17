@@ -5,14 +5,11 @@
       <el-button @click="onCancel">启动任务</el-button>
     </el-row>
 
-    <el-table ref="filterTable"
-     :data="tableData" stripe border style="width: 100%"
-    >
+    <el-table ref="filterTable" :data="tableData" stripe border style="width: 100%">
       <el-table-column prop="index" label="序号" width="80"></el-table-column>
       <el-table-column prop="parts" label="零件"></el-table-column>
 
-
-<!-- 工步-下拉框 -->
+      <!-- 工步-下拉框 -->
       <el-table-column prop="steps" label="工步">
         <template slot-scope="scope">
           <el-select v-model="scope.row.stepslist">
@@ -26,7 +23,7 @@
         </template>
       </el-table-column>
 
-<!-- 订单状态-tag -->
+      <!-- 订单状态-tag -->
       <el-table-column
         prop="state"
         label="订单状态"
@@ -35,29 +32,28 @@
         filter-placement="bottom-end"
       >
         <template slot-scope="scope">
-           <el-tag
-          :type="scope.row.state == '进行中' ? '' :scope.row.state == '已完成' ? 'success':'info'"
-          disable-transitions>{{scope.row.state}}</el-tag>
+          <el-tag
+            :type="scope.row.state == '进行中' ? '' :scope.row.state == '已完成' ? 'success':'info'"
+            disable-transitions
+          >{{scope.row.state}}</el-tag>
         </template>
-        
       </el-table-column>
 
-
-<!-- 是否合格-tag -->
-      <el-table-column prop="measure" label="机内测量"
-      :filters="[{ text: '合格', value: '合格' },{ text: '不合格', value: '不合格' }]"
+      <!-- 是否合格-tag -->
+      <el-table-column
+        prop="measure"
+        label="机内测量"
+        :filters="[{ text: '合格', value: '合格' },{ text: '不合格', value: '不合格' }]"
         :filter-method="filterTag"
         filter-placement="bottom-end"
-        >
-
- <template slot-scope="scope">
-           <el-tag
-          :type="scope.row.measure == '合格' ? 'success' :'danger'"
-          disable-transitions>{{scope.row.measure}}</el-tag>
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.measure == '合格' ? 'success' :'danger'"
+            disable-transitions
+          >{{scope.row.measure}}</el-tag>
         </template>
-
       </el-table-column>
-
 
       <el-table-column prop="taskgl" label="任务管理">
         <el-button type="text" style="padding:0">启动任务</el-button>
@@ -82,8 +78,8 @@
     padding-left: 0;
   }
   ::v-deep .el-table__row td:nth-child(3),
-  ::v-deep .el-table__row td:nth-child(4) ,
-  ::v-deep .el-table__row td:nth-child(5){
+  ::v-deep .el-table__row td:nth-child(4),
+  ::v-deep .el-table__row td:nth-child(5) {
     padding: 0;
   }
 }
@@ -92,7 +88,6 @@
 
 <script>
 export default {
-
   data() {
     return {
       tableData: [
@@ -188,24 +183,24 @@ export default {
       value: "",
     };
   },
-   methods: {
+  methods: {
     //  过滤器
-      resetDateFilter() {
-        this.$refs.filterTable.clearFilter('date');
-      },
-      clearFilter() {
-        this.$refs.filterTable.clearFilter();
-      },
-      formatter(row, column) {
-        return row.address;
-      },
-      filterTag(value, row) {
-        return row.tag === value;
-      },
-      filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
-      }
-    }
+    resetDateFilter() {
+      this.$refs.filterTable.clearFilter("date");
+    },
+    clearFilter() {
+      this.$refs.filterTable.clearFilter();
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    filterTag(value, row) {
+      return row.tag === value;
+    },
+    filterHandler(value, row, column) {
+      const property = column["property"];
+      return row[property] === value;
+    },
+  },
 };
 </script>
