@@ -6,10 +6,14 @@
       <el-table :data="tableData" stripe border style="width: 100%">
         <el-table-column prop="index" label="序号"></el-table-column>
         <el-table-column prop="countname" label="变量名"></el-table-column>
+
+        <!-- 是否合格-tag -->
         <el-table-column prop="result" label="检测结果">
-          <template scope="scope">
-            <span v-if="scope.row.isPass==='合格'" style="color: green">合格</span>
-            <span v-else style="color: red">不合格</span>
+          <template slot-scope="scope"> 
+            <el-tag
+              :type="scope.row.result == '合格' ? 'success' :'danger'"
+              disable-transitions
+            >{{scope.row.result}}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -23,10 +27,14 @@
       <el-table :data="tableData1" stripe border style="width: 100%">
         <el-table-column prop="index" label="序号"></el-table-column>
         <el-table-column prop="countname" label="变量名"></el-table-column>
+
+        <!-- 是否合格-tag -->
         <el-table-column prop="result" label="检测结果">
-          <template scope="scope">
-            <span v-if="scope.row.isPass==='合格'" style="color: green">合格</span>
-            <span v-else style="color: red">不合格</span>
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.result == '合格' ? 'success' :'danger'"
+              disable-transitions
+            >{{scope.row.result}}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -52,57 +60,57 @@ export default {
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "不合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "不合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
-        }
+          result: "合格",
+        },
       ],
       tableData1: [
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "不合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "不合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
+          result: "合格",
         },
         {
           index: "Tracydaix1",
           countname: "检验项",
-          result: "合格"
-        }
-      ]
+          result: "合格",
+        },
+      ],
     };
-  }
+  },
 };
 </script>

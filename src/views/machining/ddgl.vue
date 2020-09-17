@@ -11,6 +11,11 @@
 
       <!-- 工步-下拉框 -->
       <el-table-column prop="step" label="工步">
+      <el-table-column prop="index" label="序号" width="80"></el-table-column>
+      <el-table-column prop="parts" label="零件"></el-table-column>
+
+      <!-- 工步-下拉框 -->
+      <el-table-column prop="steps" label="工步">
         <template slot-scope="scope">
           <el-select v-model="scope.row.step" @change="stepChange(scope.row)">
             <el-option

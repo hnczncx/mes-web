@@ -35,7 +35,7 @@
     <!-- 内容区 -->
     <div class="cxglcon clearfix">
       <!-- 程序接收 -->
-      <div class="cx-s">
+      <div class="cx-s clearfix">
         <el-divider content-position="left">程序接收</el-divider>
 
         <!-- 按钮组 -->
@@ -84,6 +84,7 @@
             </template>
           </el-input>
 
+
           <!-- 接收记录 -->
           <div class="d3-log">
             <div class="d3title">
@@ -102,7 +103,7 @@
 
 
  <!-- 程序提交 -->
-      <div class="cx-s">
+      <div class="cx-s clearfix" >
         <el-divider content-position="left">程序提交</el-divider>
 
         <!-- 按钮组 -->
@@ -181,6 +182,14 @@
 .cxgl-container {
   .cxglcon {
     margin-top: 40px;
+  }
+  
+  .cx-s{
+    margin-bottom: 20px;
+  .el-divider__text{
+    font-weight: 700;
+    color: #606266;
+  }
   }
   ::v-deep .cx-s-d2 .el-table td {
     padding: 5px 0;
@@ -326,6 +335,8 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
+      
+     
   },
 };
 </script>
