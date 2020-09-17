@@ -9,7 +9,7 @@
 
         <!-- 是否合格-tag -->
         <el-table-column prop="result" label="检测结果">
-          <template slot-scope="scope">
+          <template slot-scope="scope"> 
             <el-tag
               :type="scope.row.result == '合格' ? 'success' :'danger'"
               disable-transitions

@@ -10,7 +10,7 @@
           :label="item.label"
           :value="item.value"
         ></el-option>
-      </el-select>
+      </el-select> 
 
       <label class="tablab">液压卡盘状态：</label>
       <el-select v-model="value1" placeholder="请选择">
