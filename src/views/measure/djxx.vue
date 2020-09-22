@@ -11,11 +11,26 @@
       <el-table-column prop="length" label="长度"></el-table-column>
       <el-table-column prop="radius1" label="半径补偿值"></el-table-column>
       <el-table-column prop="length1" label="长度补偿值"></el-table-column>
-      <el-table-column prop="radius2" label="半径补偿修改值"></el-table-column>
-      <el-table-column prop="length2" label="长度补偿修改值"></el-table-column>
+
+      <el-table-column label="半径补偿修改值">
+        <template slot-scope="scope">
+          <el-input placeholder="请输入内容" v-show="scope.row.show" v-model="scope.row.radius2"></el-input>
+          <span v-show="!scope.row.show">{{scope.row.radius2}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="长度补偿修改值">
+         <template slot-scope="scope">
+          <el-input placeholder="请输入内容" v-show="scope.row.show" v-model="scope.row.length2"></el-input>
+          <span v-show="!scope.row.show">{{scope.row.length2}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="operation" label="操作">
-        <el-button type="text" style="padding:0">编辑</el-button>
-        <el-button type="text" style="padding:0">提交</el-button>
+        <template slot-scope="scope">
+          <el-button type="text" style="padding:0" @click="scope.row.show =true">编辑</el-button>
+          <el-button type="text" style="padding:0" @click="scope.row.show =false">保存</el-button>
+          <el-button type="text" style="padding:0">提交</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -39,7 +54,8 @@ export default {
           length1: "100",
           radius2: "300",
           length2: "100",
-          operation: "300"
+          operation: "300",
+          show: false,
         },
 
         {
@@ -50,7 +66,8 @@ export default {
           length1: "100",
           radius2: "300",
           length2: "100",
-          operation: "300"
+          operation: "300",
+          show: false,
         },
         {
           index: "1",
@@ -60,7 +77,8 @@ export default {
           length1: "100",
           radius2: "300",
           length2: "100",
-          operation: "300"
+          operation: "300",
+          show: false,
         },
         {
           index: "1",
@@ -70,70 +88,11 @@ export default {
           length1: "100",
           radius2: "300",
           length2: "100",
-          operation: "300"
+          operation: "300",
+          show: false,
         },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        },
-        {
-          index: "1",
-          radius: "100",
-          length: "300",
-          radius1: "1",
-          length1: "100",
-          radius2: "300",
-          length2: "100",
-          operation: "300"
-        }
-      ]
+      ],
     };
-  }
+  },
 };
 </script>
