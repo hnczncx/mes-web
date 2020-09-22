@@ -134,7 +134,7 @@
           </template>
 
           <div class="clearfix">
-            <div class="sleft">
+            <!-- <div class="sleft">
               <el-input v-model="input1" :readonly="true">
                 <template slot="prepend">
                   <img src="../../assets/equipment_l1.jpg" />
@@ -152,7 +152,7 @@
                   <img src="../../assets/equipment_l3.jpg" />
                 </template>
               </el-input>
-            </div>
+            </div> -->
 
             <div class="sright">
               <el-input placeholder="0%" v-model="input11" :readonly="true">

@@ -108,13 +108,12 @@ export default {
       return row.routeId == value;
     },
     handleCurrentChange (val) {
-      console.info(val)
       let param = {pageSize:this.page.size,pageNumber:val}
       this.getDatectionMould(param);
     },
     getDatectionMould (param) {
       request
-        .post("datectionMould/page",{pageSize:100,pageNumber:1})
+        .post("detectionMould/page",{pageSize:100,pageNumber:1})
         .then((res) => {
           const dataInfo = res.dataInfo;
           if (res.returnCode == 200) {

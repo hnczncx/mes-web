@@ -10,7 +10,7 @@
       <el-table-column prop="workpieceName" label="零件"></el-table-column>
 
       <!-- 工步-下拉框 -->
-      <el-table-column prop="step" label="工步">
+      <el-table-column prop="step" label="工步"></el-table-column>
       <el-table-column prop="index" label="序号" width="80"></el-table-column>
       <el-table-column prop="parts" label="零件"></el-table-column>
 
