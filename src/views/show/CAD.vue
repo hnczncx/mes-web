@@ -11,17 +11,13 @@
         mode="horizontal"
         @select="handleSelect"
         active-text-color="#88ceff"
-        router
-      >
+        router >
         <el-menu-item index="/show/index">首页</el-menu-item>
         <el-menu-item index="/show/CAD">CAD</el-menu-item>
         <el-menu-item index="/show/PLM">PLM</el-menu-item>
         <el-menu-item index="/show/MES">MES</el-menu-item>
         <el-menu-item index="/show/BIM">BIM</el-menu-item>
-       
       </el-menu>
-
-      
     </div>
 
     <!-- 内容区 -->
@@ -35,8 +31,10 @@
             </div>
             <div class="cadcon">
               <div class="demo-image">
-                <div class="block">
-                  <el-image :src="url" style></el-image>
+                <div class="block" v-if="aviUrl != null">
+                  <video id="myVideo" class="video-js vjs-big-play-centered">
+                    <!-- <source src="aviUrl" type="video/mp4" > -->
+                  </video>
                 </div>
               </div>
             </div>
@@ -47,12 +45,16 @@
         <div class="l2-con">
           <el-card class="box-card" shadow="never" :body-style="{ padding: '0px' }">
             <div class="head">
-              <span>装配动画</span>
+              <span>CAE分析</span>
             </div>
             <div class="cadcon">
               <div class="demo-image">
                 <div class="block">
-                  <el-image :src="url2" style></el-image>
+                  <el-carousel trigger="click" height="450px">
+                    <el-carousel-item v-for="item in caeList" :key="item.id">
+                      <el-image :src="item.url" style></el-image>
+                    </el-carousel-item>
+                  </el-carousel>
                 </div>
               </div>
             </div>
@@ -65,25 +67,16 @@
         <div class="r1-con">
           <el-card class="box-card" shadow="never" :body-style="{ padding: '0px' }">
             <div class="head">
-              <span>CAE分析</span>
+              <span>PLM标注</span>
             </div>
             <div class="cadcon">
               <div class="demo-image">
                 <div class="block">
-                  <el-image :src="url3" style></el-image>
-                </div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-
-        <!-- 右21 -->
-        <div class="r2-con">
-          <el-card class="box-card" shadow="never" :body-style="{ padding: '0px' }">
-            <div class="cadcon">
-              <div class="demo-image">
-                <div class="block">
-                  <el-image :src="url4" style></el-image>
+                  <el-carousel trigger="click" height="450px">
+                    <el-carousel-item v-for="item in plmList" :key="item.id">
+                      <el-image :src="item.url" style></el-image>
+                    </el-carousel-item>
+                  </el-carousel>
                 </div>
               </div>
             </div>
@@ -172,15 +165,23 @@
   background-repeat: no-repeat;
   background-size: 100% 100%;
   width: 910px;
-  height: 460px;
+  height: 470px;
 }
+
+.el-carousel,
+.el-carousel__container{
+  width: 890px;
+  height: 450px;
+}
+
 .r-con {
   background-image: url("../../assets/show/caeBg.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
+  margin-top: 20px;
   float: left;
   width: 910px;
-  height: 940px;
+  height: 470px;
 }
 
 .bgContainer {
@@ -237,15 +238,21 @@
 }
 </style>
 <script>
+import request from "@/utils/request";
+import { getCoordinateSystemDimensions } from 'echarts/lib/echarts';
 export default {
   data() {
     return {
       activeIndex: "1",
-      url: require("../../assets/show/装配动画.jpg"),
-      url2: require("../../assets/show/PMI标注.jpg"),
-      url3: require("../../assets/show/CAE图片1.jpg"),
-      url4: require("../../assets/show/CAE图片2.jpg"),
+      aviUrl:"",
+      caeList:[],
+      plmList:[],
     };
+  },
+  mounted () {
+    this.getCaeList()
+    this.getPlmList()
+    this.getAviUrl();
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -254,6 +261,64 @@ export default {
      // 看板 to MES后台-任务管理页
     gotoTask(){
       this.$router.replace('/task/index');
+    },
+    getCaeList () {
+      request
+        .post("fileItem/page",{pageSize:10,pageNumber:1,filename:'CAE',fileType:'jpg'})
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.caeList = dataInfo;
+          } else {
+            this.$message({ message: "CAE图片查找失败！", type: "warning" });
+          }
+        });
+    },
+    getPlmList () {
+      request
+        .post("fileItem/page",{pageSize:10,pageNumber:1,filename:'PMI',fileType:'jpg'})
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.plmList = dataInfo;
+          } else {
+            this.$message({ message: "PMI图片查找失败！", type: "warning" });
+          }
+        });
+    },
+    getAviUrl () {
+      request
+        .post("fileItem/page",{pageSize:1,pageNumber:1,filename:'AVI',fileType:'avi'})
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.aviUrl = dataInfo[0].url;
+            
+            console.info(this.aviUrl)
+            this.initVideo()
+          } else {
+            this.$message({ message: "AVI视频查找失败！", type: "warning" });
+          }
+        });
+    },
+    initVideo() {
+      //初始化视频方法
+      let myPlayer = this.$video(myVideo, {
+          //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+          controls: true,
+          //自动播放属性,muted:静音播放
+          autoplay: "muted",
+          //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+          preload: "auto",
+          //设置视频播放器的显示宽度（以像素为单位）
+          width: "895px",
+          //设置视频播放器的显示高度（以像素为单位）
+          height: "445px",
+          sources:[{
+            type: "video/mp4",
+            src: this.aviUrl
+          }]
+      });
     }
   },
 };

@@ -1,19 +1,20 @@
 <template>
   <div class="app-container BOM-container">
     <!-- 标签页 -->
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="PBOM" name="first"></el-tab-pane>
-      <el-tab-pane label="EBOM" name="second"></el-tab-pane>
+    <el-tabs v-model="defaultTabs" @tab-click="handleClick">
+      <el-tab-pane label="PBOM" name="PBOM"></el-tab-pane>
+      <el-tab-pane label="EBOM" name="EBOM"></el-tab-pane>
     </el-tabs>
 
     <!-- 左-树结构 -->
     <div class="c-left">
       <div class="custom-tree-container">
         <div class="block">
-          <p>使用 render-content</p>
+          <!-- <p>使用 render-content</p> -->
 
           <el-tree
             :data="data"
+            label="ljmc"
             :props="defaultProps"
             @node-click="handleNodeClick"
             :render-content="renderContent"
@@ -24,40 +25,40 @@
     <!-- 右-BOM信息 -->
     <div class="c-right">
       <div>
-        <el-input placeholder="PBOM" v-model="input1">
+        <el-input placeholder="PBOM" v-model="bomType">
           <template slot="prepend">BOM类型</template>
         </el-input>
-        <el-input placeholder="PBOM" v-model="input2">
+        <el-input placeholder="PBOM" v-model="csuffix">
           <template slot="prepend">代号后缀</template>
         </el-input>
 
-        <el-input placeholder="连接轴" v-model="input3">
+        <el-input placeholder="连接轴" v-model="ljmc">
           <template slot="prepend">零件名称</template>
         </el-input>
 
-        <el-input placeholder="45#" v-model="input4">
+        <el-input placeholder="45#" v-model="cl">
           <template slot="prepend">材质</template>
         </el-input>
 
-        <el-input placeholder="24" v-model="input5">
+        <el-input placeholder="24" v-model="cnumber">
           <template slot="prepend">数量</template>
         </el-input>
-        <el-input placeholder="v1001-2" v-model="input6">
+        <el-input placeholder="v1001-2" v-model="criv">
           <template slot="prepend">版本号</template>
         </el-input>
-        <el-input placeholder="ZN-12-10-49" v-model="input7">
+        <el-input placeholder="ZN-12-10-49" v-model="th">
           <template slot="prepend">图号</template>
         </el-input>
-        <el-input placeholder="2 : 1" v-model="input8">
+        <el-input placeholder="2 : 1" v-model="tzbl">
           <template slot="prepend">图纸比例</template>
         </el-input>
-        <el-input placeholder="PBOM" v-model="input9">
+        <el-input placeholder="PBOM" v-model="xm">
           <template slot="prepend">设计人</template>
         </el-input>
-        <el-input placeholder="车床" v-model="input10">
+        <el-input placeholder="车床" v-model="sb">
           <template slot="prepend">设备</template>
         </el-input>
-        <el-input placeholder="PBOM" v-model="input11">
+        <el-input placeholder="PBOM" v-model="xmu">
           <template slot="prepend">项目</template>
         </el-input>
       </div>
@@ -138,85 +139,66 @@ padding: 0;list-style: none;
 
 <script>
 let id = 1000;
-
+import request from "@/utils/request";
 export default {
   data() {
     return {
       // 树结构
-      data: [
-        {
-          label: "ZN-02-00-01装配",
-          children: [
-            {
-              label: "ZN-02-00-01连接轴",
-              children: [
-                {
-                  label: "零件1",
-                  children: [
-                    {
-                      label: "属性表",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              label: "ZN-02-00-01上板",
-              children: [
-                {
-                  label: "零件1-2",
-                  children: [
-                    {
-                      label: "属性表",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              label: "ZN-02-00-01下板",
-              children: [
-                {
-                  label: "零件1-3",
-                  children: [
-                    {
-                      label: "属性表",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      eBom:"EBOM",
+      pBom:"PBOM",
+      data: [ ],
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "ljmc",
       },
-      input1: "",
-      input2: "",
-      input3: "",
-      input4: "",
-      input5: "",
-      input6: "",
-      input7: "",
-      input8: "",
-      input9: "",
-      input10: "",
-      input11: "",
-      // 标签页
-      activeName: "first",
+      bomType: "",
+      csuffix: "",
+      ljmc: "",
+      cl: "",
+      cnumber: "",
+      criv: "",
+      th: "",
+      tzbl: "",
+      xm: "",
+      sb: "",
+      xmu: "",
+      defaultTabs:"PBOM"
     };
   },
-
+  mounted () {
+    this.loadData("PBOM")
+  },
   methods: {
-    // 标签页
-    handleClick(tab, event) {
-      console.log(tab, event);
+    loadData(type){
+      request
+        .post("technology/queryTree",{type:type})
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            if(dataInfo.length > 0){
+              this.data = dataInfo;
+            }
+          } else {
+            this.$message({ message: "查找树结构失败！", type: "warning" });
+          }
+        });
     },
-
+    // 标签页
+    handleClick(e) {
+      this.loadData(e.name)
+    },
     handleNodeClick(data) {
-      console.log(data);
+      this.bomType = data.bomType
+      this.csuffix = data.csuffix
+      this.ljmc = data.ljmc
+      this.cl = data.cl
+      this.cnumber = data.cnumber
+      this.criv = data.criv
+      this.th = data.th
+      this.tzbl = data.tzbl
+      this.xm = data.xm
+      this.sb = data.sb
+      this.xmu = data.xmu
     },
 
     // 添加一个节点

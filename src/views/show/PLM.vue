@@ -3,8 +3,8 @@
     <!-- 顶部导航 -->
     <div class="bgContainer">
       <!-- 综合看板logo，点击返回MES后台 -->
-      <div class="showLogo"  @click="gotoTask">综合看板</div>
-        <div class="line"></div>
+      <div class="showLogo" @click="gotoTask">综合看板</div>
+      <div class="line"></div>
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
@@ -35,7 +35,11 @@
             <div class="cadcon">
               <div class="demo-image">
                 <div class="block">
-                  <el-image :src="url1" style></el-image>
+                  <el-carousel trigger="click" height="450px">
+                    <el-carousel-item v-for="item in plmList" :key="item.id">
+                      <el-image :src="item.url" style></el-image>
+                    </el-carousel-item>
+                  </el-carousel>
                 </div>
               </div>
             </div>
@@ -51,7 +55,9 @@
             <div class="cadcon">
               <div class="demo-image">
                 <div class="block">
-                  <el-image :src="url1" style></el-image>
+                  <video id="myVideo" class="video-js vjs-big-play-centered">
+                    <!-- <source src="aviUrl" type="video/mp4" > -->
+                  </video>
                 </div>
               </div>
             </div>
@@ -66,42 +72,49 @@
 
             <div class="cadcon1">
               <!-- 模块标签切换 -->
-              <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="PBOM" name="first">
-                  <ul id="eqInfolist">
-                    <li>
-                      <span>零件名称</span>
-                      <span>ZN-00-12-30 下板</span>
-                    </li>
-                    <li>
-                      <span>零件编号</span>
-                      <span>ZN1I1200ID</span>
-                    </li>
-                    <li>
-                      <span>图号</span>
-                      <span>ZN-00-12-30</span>
-                    </li>
-                    <li>
-                      <span>尺寸</span>
-                      <span>200mm*41mm</span>
-                    </li>
-                    <li>
-                      <span>数量</span>
-                      <span>18</span>
-                    </li>
-                    <li>
-                      <span>更新时间</span>
-                      <span>2020-04-21 18:23:45</span>
-                    </li>
-                    <li>
-                      <span>版本</span>
-                      <span>v2.1.1</span>
-                    </li>
-                  </ul>
-                </el-tab-pane>
+              <div class="select">
+                <el-button-group>
+                  <el-button type="text" @click="changeCascader('PBOM')"> PBOM </el-button>
+                  <el-button type="text" @click="changeCascader('EBOM')"> EBOM </el-button>
+                </el-button-group>
 
-                <el-tab-pane label="EBOM" name="second">EBOM</el-tab-pane>
-              </el-tabs>
+                <el-cascader
+                  v-model="value"
+                  :options="options"
+                  @change="handleChange"
+                  :props="props"
+                ></el-cascader>
+              </div>
+              <ul id="eqInfolist">
+                <li>
+                  <span>零件名称</span>
+                  <span>{{bom.ljmc}}</span>
+                </li>
+                <li>
+                  <span>零件编号</span>
+                  <span>{{bom.csuffix}}</span>
+                </li>
+                <li>
+                  <span>图号</span>
+                  <span>{{bom.th}}</span>
+                </li>
+                <li>
+                  <span>尺寸</span>
+                  <span>{{bom.cl}}</span>
+                </li>
+                <li>
+                  <span>数量</span>
+                  <span>{{bom.cnumber}}</span>
+                </li>
+                <li>
+                  <span>更新时间</span>
+                  <span>{{bom.ljmc}}</span>
+                </li>
+                <li>
+                  <span>版本</span>
+                  <span>{{bom.criv}}</span>
+                </li>
+              </ul>
             </div>
           </el-card>
         </div>
@@ -118,7 +131,7 @@
 
             <div class="cadcon1">
               <template>
-                <el-table :data="tableData" style="width: 100%">
+                <el-table :data="datectionMould" style="width: 100%">
                   <el-table-column prop="name" label="零件名称"></el-table-column>
                   <el-table-column prop="name2" label="材料名称"></el-table-column>
                   <el-table-column prop="index" label="工序号"></el-table-column>
@@ -137,16 +150,15 @@
               <span>结构规则</span>
             </div>
 
-           <div class="cadcon1">
+            <div class="cadcon1">
               <template>
-                <el-table :data="tableData2" style="width: 100%">
+                <el-table :data="checkList" style="width: 100%">
                   <el-table-column prop="name" label="结构名称"></el-table-column>
-                  <el-table-column prop="name2" label="齐套规则名称"  ></el-table-column>
-                  <el-table-column prop="state" label="是否通过" width="80"></el-table-column>
+                  <el-table-column prop="rule" label="齐套规则名称"></el-table-column>
+                  <el-table-column prop="isPass" label="是否通过" width="80"></el-table-column>
                 </el-table>
               </template>
             </div>
-
           </el-card>
         </div>
 
@@ -156,16 +168,15 @@
               <span>任务详情</span>
             </div>
 
-          <div class="cadcon1">
+            <div class="cadcon1">
               <template>
-                <el-table :data="tableData3" style="width: 100%">
+                <el-table :data="taskList" style="width: 100%">
                   <el-table-column prop="name" label="任务名称" width="320"></el-table-column>
-                  <el-table-column prop="steps" label="当前步骤"></el-table-column>
+                  <el-table-column prop="inStep" label="当前步骤"></el-table-column>
                   <el-table-column prop="state" label="状态"></el-table-column>
                 </el-table>
               </template>
             </div>
-
           </el-card>
         </div>
       </div>
@@ -177,18 +188,19 @@
 
 #eqInfolist {
   width: 466px;
-  height: 320px;
+  height: 280px;
   float: left;
   color: white;
   display: block;
   margin: 0;
   padding: 0;
+  margin-top: 10px;
   background-color: rgba($color: #84c8f7, $alpha: 0.04);
   border: 1px solid rgba($color: #84c8f7, $alpha: 0.4);
 }
 #eqInfolist li {
   list-style: none;
-  height: 54px;
+  height: 38px;
   line-height: 54px;
 }
 #eqInfolist li span:nth-child(1) {
@@ -258,6 +270,18 @@
     color: rgba(136, 206, 255, 1);
     height: 38px;
   }
+  .select{
+    display: flex;
+    justify-content: space-between;
+
+    .el-button-group button{
+      padding: 10px;
+    }
+
+    .el-cascader{
+      margin-right: 35px;
+    }
+  }
 }
 
 /* 模块背景 */
@@ -296,6 +320,8 @@
   padding-left: 20px;
   margin-top: 1px;
   margin-left: 1px;
+  display: flex;
+  justify-content: space-around;
 }
 .head {
   background-image: linear-gradient(
@@ -422,14 +448,35 @@
 }
 </style>
 <script>
+import request from "@/utils/request";
 export default {
   data() {
     return {
       activeIndex: "1",
       activeIndex1: "2",
-      url1: require("../../assets/show/plm1.jpg"),
+      plmList: [],
+      taskList: [],
+      checkList: [],
+      options: [],
       activeName: "first",
-      tableData: [
+      props: {
+        value: "id",
+        label: "ljmc",
+      },
+      bom: {
+        bomType: "",
+        csuffix: "",
+        ljmc: "",
+        cl: "",
+        cnumber: "",
+        criv: "",
+        th: "",
+        tzbl: "",
+        xm: "",
+        sb: "",
+        xmu: "",
+      },
+      datectionMould: [
         {
           name: "下板",
           name2: "材料材料",
@@ -471,73 +518,140 @@ export default {
           meth: "A",
         },
       ],
-      tableData2: [
-        {
-          name: "ZM-03-01-15卸料螺丝",
-          name2: "关联工艺对象齐套性规则",
-          state: "是",
-        },
-        {
-          name: "ZM-03-01-15卸料螺丝",
-          name2: "关联工艺对象齐套性规则",
-          state: "是",
-        },
-        {
-          name: "ZM-03-01-15卸料螺丝",
-          name2: "关联工艺对象齐套性规则",
-          state: "是",
-        },
-        {
-          name: "ZM-03-01-15卸料螺丝",
-          name2: "关联工艺对象齐套性规则",
-          state: "是",
-        },
-        {
-          name: "ZM-03-01-15卸料螺丝",
-          name2: "关联工艺对象齐套性规则",
-          state: "是",
-        },
-        ],
-        tableData3: [
-        {
-          name: "上模装配数控加工审批流程ZM-03-01-03",
-          steps: "编制",
-          state: "完成",
-        },
-        {
-          name: "上模装配数控加工审批流程ZM-03-01-03",
-          steps: "编制",
-          state: "完成",
-        },
-        {
-          name: "上模装配数控加工审批流程ZM-03-01-03",
-          steps: "编制",
-          state: "完成",
-        },
-        {
-          name: "上模装配数控加工审批流程ZM-03-01-03",
-          steps: "编制",
-          state: "完成",
-        },
-        {
-          name: "上模装配数控加工审批流程ZM-03-01-03",
-          steps: "编制",
-          state: "完成",
-        },
-        ]
     };
+  },
+  mounted() {
+    this.getPlmList();
+    this.getCheckList();
+    this.getTaskList();
+    this.getOptions("PBOM");
+    this.getAviUrl();
+    //this.getDatectionMould();
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    changeCascader(value){
+      this.getOptions(value);
+    },
+    handleChange(value) {
+      request
+        .post("technology/queryOne/" + value[value.length - 1])
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.bom = dataInfo;
+          } else {
+            this.$message({ message: "CAE图片查找失败！", type: "warning" });
+          }
+        });
     },
     // 看板 to MES后台-任务管理页
-    gotoTask(){
- this.$router.replace('/task/index');
-    }
+    gotoTask() {
+      this.$router.replace("/task/index");
+    },
+    getPlmList() {
+      request
+        .post("fileItem/page", {
+          pageSize: 10,
+          pageNumber: 1,
+          filename: "PLM",
+          fileType: "jpg",
+        })
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.plmList = dataInfo;
+          } else {
+            this.$message({ message: "CAE图片查找失败！", type: "warning" });
+          }
+        });
+    },
+    getAviUrl() {
+      request
+        .post("fileItem/page", {
+          pageSize: 1,
+          pageNumber: 1,
+          filename: "MP4",
+          fileType: "mp4",
+        })
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.aviUrl = dataInfo[0].url;
+            this.initVideo();
+          } else {
+            this.$message({ message: "MP4视频查找失败！", type: "warning" });
+          }
+        });
+    },
+    initVideo() {
+      //初始化视频方法
+      let myPlayer = this.$video(myVideo, {
+        //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+        controls: true,
+        //自动播放属性,muted:静音播放
+        autoplay: "muted",
+        //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+        preload: "auto",
+        //设置视频播放器的显示宽度（以像素为单位）
+        width: "610px",
+        //设置视频播放器的显示高度（以像素为单位）
+        height: "440px",
+        sources: [
+          {
+            type: "video/mp4",
+            src: this.aviUrl,
+          },
+        ],
+      });
+    },
+    getCheckList() {
+      request.post("technology/queryCheck").then((res) => {
+        const dataInfo = res.dataInfo;
+        if (res.returnCode == 200) {
+          this.checkList = dataInfo;
+        } else {
+          this.$message({ message: "结构规则查找失败！", type: "warning" });
+        }
+      });
+    },
+    getTaskList() {
+      request.post("technology/queryTask").then((res) => {
+        const dataInfo = res.dataInfo;
+        if (res.returnCode == 200) {
+          this.taskList = dataInfo.slice(0, 6);
+        } else {
+          this.$message({ message: "任务详情查找失败！", type: "warning" });
+        }
+      });
+    },
+    getDatectionMould() {
+      request.post("fileItem/readList").then((res) => {
+        const dataInfo = res.dataInfo;
+        if (res.returnCode == 200) {
+          if (dataInfo.length > 0) {
+            this.tableData = dataInfo;
+          }
+        } else {
+          this.$message({ message: "查找Excel数据失败！", type: "warning" });
+        }
+      });
+    },
+    getOptions(type) {
+      request.post("technology/queryTree", { type: type }).then((res) => {
+        const dataInfo = res.dataInfo;
+        console.info(dataInfo);
+        if (res.returnCode == 200) {
+          if (dataInfo.length > 0) {
+            this.options = dataInfo;
+          }
+        } else {
+          this.$message({ message: "查找树结构失败！", type: "warning" });
+        }
+      });
+    },
   },
 };
 </script>

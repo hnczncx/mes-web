@@ -3,7 +3,7 @@
     <!-- 顶部导航 -->
     <div class="bgContainer">
       <!-- 综合看板logo，点击返回MES后台 -->
-      <div class="showLogo"  @click="gotoTask">综合看板</div>
+      <div class="showLogo" @click="gotoTask">综合看板</div>
       <div class="line"></div>
       <el-menu
         :default-active="activeIndex"
@@ -66,15 +66,29 @@
                     <el-image :src="url" style></el-image>
                   </div>
                 </div>
-                
-                <ul id="eqInfolist">
-                  <li><span>设备名称</span><span>2号五轴加工中心</span></li>
-                  <li><span>设备状态</span><span>报警</span></li>
-                  <li><span>网络检测</span><span>在线</span></li>
-                  <li><span>程序名称</span><span>program</span></li>
-                  <li style="height:102px"><span >报警信息</span><span>这是一段描述...</span></li>
-                </ul>
 
+                <ul id="eqInfolist">
+                  <li>
+                    <span>设备名称</span>
+                    <span>2号五轴加工中心</span>
+                  </li>
+                  <li>
+                    <span>设备状态</span>
+                    <span>报警</span>
+                  </li>
+                  <li>
+                    <span>网络检测</span>
+                    <span>在线</span>
+                  </li>
+                  <li>
+                    <span>程序名称</span>
+                    <span>program</span>
+                  </li>
+                  <li style="height:102px">
+                    <span>报警信息</span>
+                    <span>这是一段描述...</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </el-card>
@@ -106,43 +120,19 @@
               <span>刀具管理</span>
             </div>
             <div class="cadcon1">
-               <template>
-    <el-table
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column 
-        prop="index"
-        label="刀号"
-        >
-        <!-- width="60" -->
-      </el-table-column>
-      <el-table-column
-        prop="radius"
-        label="半径(mm)"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="length"
-        label="长度(mm)">
-      </el-table-column>
-       <el-table-column
-        prop="radius1"
-        label="半径补偿值">
-      </el-table-column>
-       <el-table-column
-        prop="length1"
-        label="长度补偿值">
-      </el-table-column>
-       <el-table-column
-        prop="radius2"
-        label="半径补偿修改值">
-      </el-table-column>
-       <el-table-column
-        prop="length2"
-        label="长度补偿修改值">
-      </el-table-column>
-    </el-table>
-  </template>
+              <template>
+                <el-table :data="tableData" style="width: 100%">
+                  <el-table-column prop="code" label="刀号">
+                    <!-- width="60" -->
+                  </el-table-column>
+                  <el-table-column prop="radius" label="半径(mm)"></el-table-column>
+                  <el-table-column prop="length" label="长度(mm)"></el-table-column>
+                  <el-table-column prop="radiusSubjoin" label="半径补偿值"></el-table-column>
+                  <el-table-column prop="lengthSubjoin" label="长度补偿值"></el-table-column>
+                  <el-table-column prop="updateRadiusSubjoin" label="半径补偿修改值"></el-table-column>
+                  <el-table-column prop="updateLengthSubjoin" label="长度补偿修改值"></el-table-column>
+                </el-table>
+              </template>
             </div>
           </el-card>
         </div>
@@ -171,26 +161,38 @@
 <style lang="scss" scoped>
 .MES-container {
   // 刀具信息表格
-  ::v-deep .el-table--enable-row-hover .el-table__body tr:hover>td{
+  ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: rgba($color: #88ceff, $alpha: 0.1);
   }
-  .el-table{
-    background-color: rgba(0, 0, 0, 0);color: white;
+  .el-table {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
   }
-  .el-table::before{background-color: rgba(0, 0, 0, 0);}
-   ::v-deep .el-table thead{background-color: rgba($color: #88ceff, $alpha: 0.04);
-  border: 1px solid rgba($color: #88ceff, $alpha: 0.2);}
-::v-deep .el-table__body,::v-deep .el-table__header{border-collapse: collapse;}
+  .el-table::before {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  ::v-deep .el-table thead {
+    background-color: rgba($color: #88ceff, $alpha: 0.04);
+    border: 1px solid rgba($color: #88ceff, $alpha: 0.2);
+  }
+  ::v-deep .el-table__body,
+  ::v-deep .el-table__header {
+    border-collapse: collapse;
+  }
 
-  ::v-deep .el-table th{ 
-  background-color: rgba(0, 0, 0, 0);}
-  ::v-deep .el-table th.is-leaf{border: none;}
-  ::v-deep .el-table tr{display: '';
+  ::v-deep .el-table th {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  ::v-deep .el-table th.is-leaf {
+    border: none;
+  }
+  ::v-deep .el-table tr {
+    display: "";
     height: 52px;
     background-color: rgba($color: #88ceff, $alpha: 0.02);
-  border: 1px solid rgba($color: #88ceff, $alpha: 0.2);
+    border: 1px solid rgba($color: #88ceff, $alpha: 0.2);
   }
-  ::v-deep .el-table td{
+  ::v-deep .el-table td {
     border: none;
   }
   // 进度条
@@ -282,25 +284,41 @@
   }
 }
 // 设备图片
-.eq2 .demo-image{
-  width: 388px;height: 320px;
-   background-color: rgba($color: #84c8f7, $alpha: 0.04);
-  border: 1px solid rgba($color: #84c8f7, $alpha: 0.4);padding: 8px;
-  float: left;margin-right: 14px;
-}
-#eqInfolist{width: 466px;height: 320px;float: left;color: white; display: block;margin: 0;padding: 0;
-background-color: rgba($color: #84c8f7, $alpha: 0.04);
+.eq2 .demo-image {
+  width: 388px;
+  height: 320px;
+  background-color: rgba($color: #84c8f7, $alpha: 0.04);
   border: 1px solid rgba($color: #84c8f7, $alpha: 0.4);
-  }
-#eqInfolist li{list-style: none;height: 54px;line-height: 54px;}
-#eqInfolist li span:nth-child(1) {
-background-color: rgba($color: #2f81a1, $alpha: 0.1);display: block;float: left;
-padding-left: 30px;
-    padding-right: 30px;
-    margin-right: 20px;
-    height: 100%;
+  padding: 8px;
+  float: left;
+  margin-right: 14px;
 }
-.eq2 .demo-image .block{
+#eqInfolist {
+  width: 466px;
+  height: 320px;
+  float: left;
+  color: white;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background-color: rgba($color: #84c8f7, $alpha: 0.04);
+  border: 1px solid rgba($color: #84c8f7, $alpha: 0.4);
+}
+#eqInfolist li {
+  list-style: none;
+  height: 54px;
+  line-height: 54px;
+}
+#eqInfolist li span:nth-child(1) {
+  background-color: rgba($color: #2f81a1, $alpha: 0.1);
+  display: block;
+  float: left;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-right: 20px;
+  height: 100%;
+}
+.eq2 .demo-image .block {
   width: 100%;
   height: 100%;
   background: black;
@@ -378,7 +396,8 @@ padding-left: 30px;
 .l-con,
 .r-con {
   float: left;
-  position: relative;width: calc(50% - 10px);
+  position: relative;
+  width: calc(50% - 10px);
 }
 .l2-con,
 .r2-con {
@@ -420,7 +439,8 @@ padding-left: 30px;
   user-select: none;
 }
 .MES-container {
-  background-image: url("../../assets/show/grid_bg.png"),radial-gradient(#0b3246,#0b1822);
+  background-image: url("../../assets/show/grid_bg.png"),
+    radial-gradient(#0b3246, #0b1822);
   /* background-repeat: no-repeat; */
   // background-size: 100% 100%;
   min-height: 100%;
@@ -451,7 +471,7 @@ padding-left: 30px;
 </style>
 
 <script>
-
+import request from "@/utils/request";
 export default {
   data() {
     return {
@@ -463,60 +483,32 @@ export default {
       percentage1: 67,
       percentage2: 46,
       percentage3: 29,
-      tableData: [{
-            index: '012',
-            radius: '200',
-            length: '300',
-             radius1: '200',
-            length1: '300',
-             radius2: '200',
-            length2: '300'
-          }, {
-            index: '012',
-            radius: '200',
-            length: '300',
-             radius1: '200',
-            length1: '300',
-             radius2: '200',
-            length2: '300'
-          },
-          {
-            index: '012',
-            radius: '200',
-            length: '300',
-             radius1: '200',
-            length1: '300',
-             radius2: '200',
-            length2: '300'
-          },
-          {
-            index: '012',
-            radius: '200',
-            length: '300',
-             radius1: '200',
-            length1: '300',
-             radius2: '200',
-            length2: '300'
-          },
-          {
-            index: '012',
-            radius: '200',
-            length: '300',
-             radius1: '200',
-            length1: '300',
-             radius2: '200',
-            length2: '300'
-          },]
+      tableData: [],
     };
+  },
+  mounted() {
+    this.getTableData();
   },
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
-     // 看板 to MES后台-任务管理页
-    gotoTask(){
- this.$router.replace('/task/index');
-    }
+    // 看板 to MES后台-任务管理页
+    gotoTask() {
+      this.$router.replace("/task/index");
+    },
+    getTableData() {
+      request
+        .post("toolInfo/page", { pageSize: 5, pageNumber: 1 })
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.tableData = dataInfo;
+          } else {
+            this.$message({ message: "查找刀具失败！", type: "warning" });
+          }
+        });
+    },
   },
 };
 </script>
