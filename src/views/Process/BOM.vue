@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container BOM-container">
+  <div class="app-container BOM-container clearfix">
     <!-- 标签页 -->
     <el-tabs v-model="defaultTabs" @tab-click="handleClick">
       <el-tab-pane label="PBOM" name="PBOM"></el-tab-pane>
@@ -7,6 +7,7 @@
     </el-tabs>
 
     <!-- 左-树结构 -->
+
     <div class="c-left">
       <div class="custom-tree-container">
         <div class="block">
@@ -18,10 +19,15 @@
             :props="defaultProps"
             @node-click="handleNodeClick"
             :render-content="renderContent"
+            default-expand-all
+            :expand-on-click-node="false"
+            current-node-key
+            highlight-current
           ></el-tree>
         </div>
       </div>
     </div>
+
     <!-- 右-BOM信息 -->
     <div class="c-right">
       <div>
@@ -67,16 +73,74 @@
 </template>
 
 <style lang="scss" scoped>
-ul {
-  list-style: none;
+// 局部滚动（树结构+右侧表单）
+
+.c-left,
+.c-right {
+  overflow-y: hidden;
+  height: calc(100vh - 110px);
+  padding-bottom: 40px;
 }
+.c-left:hover,
+.c-right:hover {
+  overflow-y: auto;
+}
+.BOM-container {
+  padding-bottom: 0;
+}
+/*定义滚动条高宽及背景高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  // background-color: #2c3e50;
+}
+/*定义滑块颜色+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #409eff;
+}
+/*定义滚动条轨道内阴影+圆角*/
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+/* 清除浮动 */
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+// 树结构测试-单选高亮
+.warpper {
+  padding-top: 20px;
+}
+.warpper
+  .el-tree--highlight-current
+  ::v-deep
+  .el-tree-node.is-checked
+  > .el-tree-node__content {
+  background-color: rgb(255, 255, 255);
+  color: rgb(64, 158, 255);
+}
+.warpper
+  .el-tree--highlight-current
+  ::v-deep
+  .el-tree-node.is-current
+  > .el-tree-node__content {
+  background-color: rgb(255, 255, 255);
+  color: rgb(64, 158, 255);
+}
+
 .BOM-container {
   // 树结构
   .el-tree {
     font-size: 14px;
   }
-  ::v-deep .el-tree-node__content:hover{
-    color: #409EFF;
+  ::v-deep .el-tree-node__content:hover {
+    color: #409eff;
   }
   ::v-deep .el-tree-node__content {
     height: 30px;
@@ -100,20 +164,11 @@ ul {
     right: 10px;
     // display: none;
   }
-  // 树结构弹窗(以下标签均在script内)
- 
-.tree-ul{
-padding: 0;list-style: none;
 }
-  ::v-deep .el-popover {
-    min-width: 220px;
-  }
-}
-
 .c-left,
 .c-right {
   float: left;
-  padding-bottom: 30px;
+  // padding-bottom: 30px;
 }
 .c-left {
   width: 30%;
@@ -127,20 +182,107 @@ padding: 0;list-style: none;
   border-left: #dcdfe6 1px solid;
   padding-left: 20px;
 }
-.custom-tree-node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  padding-right: 8px;
-}
 </style>
 
 <script>
 let id = 1000;
 import request from "@/utils/request";
 export default {
+  created() {
+    this.$nextTick(function () {
+      this.$data.TreeData.forEach((row) => {
+        if (row.show) {
+          this.$refs.tree.setCurrentKey(row.id);
+          this.$refs.tree.store.nodesMap[row.id].expanded = true;
+        }
+      });
+    });
+  },
+  methods: {
+    // 树节点鼠标移入显示菜单弹窗
+    display: function () {
+      this.showicon = true;
+    },
+    // 标签页
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
+    // 树结构单选并高亮-点击事件
+    handleNodeClick: function (v, e) {
+      // 点击事件
+      console.log(v.id);
+      console.log(e.parent.data.id);
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
+    },
+
+    // 添加一个节点
+    append(data) {
+      const newChild = { id: id++, label: "newTree", children: [] };
+      if (!data.children) {
+        this.$set(data, "children", []);
+      }
+      data.children.push(newChild);
+    },
+
+    // 删除一个节点
+
+    remove(node, data) {
+      const parent = node.parent;
+      const children = parent.data.children || parent.data;
+      const index = children.findIndex((d) => d.id === data.id);
+
+      children.splice(index, 1);
+    },
+    //
+    renderContent(h, { node, data, store }) {
+      return (
+        <span class="custom-tree-node">
+          <span>{node.label}</span>
+          <span>
+            <el-popover
+              placement="right-end"
+              offset="0"
+              width="120"
+              trigger="hover"
+              close-delay="100"
+            >
+              <ul>
+                <li>
+                  <el-button type="text" on-click={() => this.append(data)}>
+                    添加子节点
+                  </el-button>
+                </li>
+                <li>
+                  <el-button type="text">移动到...</el-button>
+                </li>
+                <li>
+                  <el-button type="text">编辑</el-button>
+                </li>
+                <li>
+                  <el-button
+                    type="text"
+                    on-click={() => this.remove(node, data)}
+                  >
+                    删除
+                  </el-button>
+                </li>
+              </ul>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-more"
+                slot="reference"
+                v-show="showicon"
+              ></el-button>
+            </el-popover>
+          </span>
+        </span>
+      );
+    },
+  },
+
   data() {
     return {
       // 树结构
@@ -258,4 +400,33 @@ export default {
   },
 };
 </script>
+<style>
+/* // 树结构弹窗(以下标签均在script内) */
+
+/* .custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+} */
+/* hover */
+
+.el-popover {
+  min-width: 120px;
+  margin-top: -15px;
+}
+ul {
+  list-style: none;
+  padding-left: 10px;
+  margin: 0;
+}
+.el-button--text span {
+  color: #606266;
+}
+.el-button--text span:hover {
+  color: #409eff;
+}
+</style>
 

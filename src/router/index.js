@@ -44,26 +44,19 @@ export const constantRoutes = [{
 
 
 
- 
+
   // 综合看板
   {
     path: '/show',
     meta: {
       title: '综合看板',
-      icon: 'form'
+      icon: 'el-icon-s-platform'
     },
     component: () => import('@/views/show/index')
   },
   // 综合看板
 
-  {
-    path: '/show/ceshi',
-    meta: {
-      title: '看板测试',
-      icon: 'form'
-    },
-    component: () => import('@/views/show/ceshi')
-  },
+
   // 看板跳转测试-自适应测试
   {
     path: '/show/zsyceshi',
@@ -102,7 +95,7 @@ export const constantRoutes = [{
       component: () => import('@/views/task/index'),
       meta: {
         title: '任务管理',
-        icon: 'form'
+        icon: 'el-icon-s-claim'
       }
     }]
   },
@@ -115,7 +108,7 @@ export const constantRoutes = [{
       component: () => import('@/views/equipment/index'),
       meta: {
         title: '设备监控',
-        icon: 'form'
+        icon: 'el-icon-video-camera-solid'
       }
     }]
   },
@@ -127,7 +120,7 @@ export const constantRoutes = [{
     name: 'Example',
     meta: {
       title: '工艺清单',
-      icon: 'el-icon-s-help'
+      icon: 'el-icon-s-order'
     },
     children: [
 
@@ -155,7 +148,7 @@ export const constantRoutes = [{
         component: () => import('@/views/Process/drawing'),
         meta: {
           title: '图纸信息',
-          icon: 'table'
+          icon: 'el-icon-picture'
         }
       }
     ]
@@ -167,7 +160,7 @@ export const constantRoutes = [{
     name: 'Example',
     meta: {
       title: '加工管理',
-      icon: 'el-icon-s-help'
+      icon: 'el-icon-s-unfold'
     },
     children: [
 
@@ -177,7 +170,7 @@ export const constantRoutes = [{
         component: () => import('@/views/machining/gygl'),
         meta: {
           title: '工艺管理',
-          icon: 'tree'
+          icon: 'el-icon-s-help'
         }
       },
       {
@@ -186,7 +179,7 @@ export const constantRoutes = [{
         component: () => import('@/views/machining/ddgl'),
         meta: {
           title: '订单管理',
-          icon: 'table'
+          icon: 'el-icon-menu'
         }
       },
       {
@@ -195,7 +188,7 @@ export const constantRoutes = [{
         component: () => import('@/views/machining/cxgl'),
         meta: {
           title: '程序管理',
-          icon: 'table'
+          icon: 'el-icon-s-operation'
         }
       }
 
@@ -209,7 +202,7 @@ export const constantRoutes = [{
     name: 'Nested',
     meta: {
       title: '测量和刀具',
-      icon: 'nested'
+      icon: 'el-icon-s-grid'
     },
     children: [{
         path: '/measure/clxx',
@@ -217,7 +210,7 @@ export const constantRoutes = [{
         name: 'Menu1',
         meta: {
           title: '测量信息',
-          icon: 'table'
+          icon: 'el-icon-s-opportunity'
         },
 
       },
@@ -227,7 +220,7 @@ export const constantRoutes = [{
         name: 'Menu2',
         meta: {
           title: '刀具信息',
-          icon: 'table'
+          icon: 'el-icon-s-check'
         }
       }
     ]
@@ -239,7 +232,7 @@ export const constantRoutes = [{
     name: 'Probe',
     meta: {
       title: '测试界面',
-      icon: 'nested'
+      icon: 'el-icon-s-cooperation'
     },
     children: [{
         path: '/Probe/jccs',
@@ -247,7 +240,7 @@ export const constantRoutes = [{
         name: 'Jccs',
         meta: {
           title: '机床测试',
-          icon: 'table'
+          icon: 'el-icon-s-finance'
         },
 
       },
@@ -257,10 +250,23 @@ export const constantRoutes = [{
         name: 'Zxjc',
         meta: {
           title: '在线检测',
-          icon: 'table'
+          icon: 'el-icon-s-marketing'
         }
       }
     ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    children: [{
+      path: '/file',
+      name: 'Form',
+      component: () => import('@/views/file'),
+      meta: {
+        title: '文件管理',
+        icon: 'el-icon-s-management'
+      }
+    }]
   },
   {
     path: '/',
@@ -271,51 +277,14 @@ export const constantRoutes = [{
       component: () => import('@/views/log'),
       meta: {
         title: '日志信息',
-        icon: 'form'
+        icon: 'el-icon-info'
       }
     }]
   },
-  {
-    path: '/',
-    component: Layout,
-    children: [{
-      path: '/treeTabceshi',
-      name: 'Form',
-      component: () => import('@/views/treeTabceshi'),
-      meta: {
-        title: '树形表格测试',
-        icon: 'form'
-      }
-    }]
-  },
- 
-  {
-    path: '/',
-    component: Layout,
-    children: [{
-      path: '/frombf',
-      name: 'Form',
-      component: () => import('@/views/frombf'),
-      meta: {
-        title: '表单备份',
-        icon: 'form'
-      }
-    }]
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: {
-        title: '首页',
-        icon: 'dashboard'
-      }
-    }]
-  },
+
+
+
+
 
   // 404 page must be placed at the end !!!
   {
