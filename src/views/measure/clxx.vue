@@ -56,32 +56,35 @@
       <el-divider content-position="left">质量跟踪表</el-divider>
       <!-- 表头操作 -->
       <label class="tablab">零件名称：</label>
-      <el-select v-model="workpieceId" placeholder="请选择" style="margin-right:40px;">
+      <el-select v-model="workpieceValueId" placeholder="请选择" style="margin-right:40px;" @change="workpieceValueChange">
         <el-option v-for="item in workpiece" :key="item.id" :label="item.name" :value="item.id" ></el-option>
       </el-select>
 
-      <el-table :data="tableData" stripe border style="width: 100%">
+      <el-table :data="detactionValueList" stripe border style="width: 100%">
         <el-table-column prop="code" label="检验项编号"></el-table-column>
         <el-table-column prop="name" label="检验项名称"></el-table-column>
         <el-table-column prop="unit" label="单位"></el-table-column>
         <el-table-column prop="standard" label="标准值"></el-table-column>
         <el-table-column prop="min" label="上差值"></el-table-column>
         <el-table-column prop="max" label="下差值"></el-table-column>
-        <el-table-column prop="value3" label="实际值"></el-table-column>
-
+        <el-table-column prop="resultValue" label="实际值"></el-table-column>
         <!-- 是否合格-tag -->
-        <el-table-column prop="result" label="测试结果">
+        <el-table-column prop="qualified" label="测试结果">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.result == '合格' ? 'success' :'danger'"
-              disable-transitions
-            >{{scope.row.result}}</el-tag>
+              :type="scope.row.qualified == '1' ? 'success' :'danger'"
+              disable-transitions>
+            {{scope.row.qualified == '1' ? '合格' :'不合格'}}</el-tag>
           </template>
         </el-table-column>
         
       </el-table>
 
-      <el-pagination style="margin-top:22px" background layout="prev, pager, next" :total="100"></el-pagination>
+      <el-pagination style="margin-top:22px" background layout="prev, pager, next"
+        :total="detactionValuePage.total"
+        :page-size="detactionValuePage.size" 
+        :pager-count="detactionValuePage.pager">
+      </el-pagination>
     </div>
 
     <el-dialog title="编辑质量项目" :visible.sync="editInfo">
@@ -134,58 +137,8 @@ import request from "@/utils/request";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          index: "Tracydaix1",
-          name: "检验项",
-          unit: "mm",
-          value: "110",
-          value1: "100",
-          value2: "300",
-          value3: "300",
-          result: "合格",
-        },
-        {
-          index: "Tracydaix1",
-          name: "检验项",
-          unit: "mm",
-          value: "110",
-          value1: "100",
-          value2: "300",
-          value3: "300",
-          result: "不合格",
-        },
-        {
-          index: "Tracydaix1",
-          name: "检验项",
-          unit: "mm",
-          value: "110",
-          value1: "100",
-          value2: "300",
-          value3: "300",
-          result: "不合格",
-        },
-        {
-          index: "Tracydaix1",
-          name: "检验项",
-          unit: "mm",
-          value: "110",
-          value1: "100",
-          value2: "300",
-          value3: "300",
-          result: "合格",
-        },
-        {
-          index: "Tracydaix1",
-          name: "检验项",
-          unit: "mm",
-          value: "110",
-          value1: "100",
-          value2: "300",
-          value3: "300",
-          result: "合格",
-        },
-      ],
+      workpieceValueId:"",
+      detactionValueList: [],
       submitType:true,
       editInfo:false,
       form:{
@@ -203,6 +156,12 @@ export default {
         total:100,
         number:1,
       },
+      detactionValuePage:{
+        size:5,
+        pager:5,
+        total:100,
+        number:1,
+      },
       newMouldName:"",
       mouldId: "",
       mouldList: [ ],
@@ -214,6 +173,7 @@ export default {
   mounted () {
     this.getDatectionMould();
     this.getWorkpieceList();
+    this.loadDetactionValueList(this.workpieceValueId);
   },
   methods: {
     getDatectionMould () {
@@ -371,6 +331,27 @@ export default {
           }
         });
     },
+    loadDetactionValueList (value) {
+      request
+        .post("orderExecuteValue/queryPage",
+          {
+            workpieceId:value,
+            pageSize:this.detactionValuePage.size,
+            pageNumber:this.detactionValuePage.number
+          })
+        .then((res) => {
+          const dataInfo = res.dataInfo;
+          if (res.returnCode == 200) {
+            this.detactionValueList = dataInfo
+            this.detactionValuePage.total = res.total
+          } else {
+            this.$message({ message: "查找检验值失败！", type: "warning" });
+          }
+        });
+    },
+    workpieceValueChange(value){
+      this.loadDetactionValueList(value);
+    }
   }
 };
 </script>
